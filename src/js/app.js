@@ -6,21 +6,7 @@
 /* eslint-disable guard-for-in */
 export default function orderByProps(obj, order) {
   const newOrderArray = [];
-
-  for (let i = 0; i < order.length; i++) {
-    if (order[i] in obj) {
-      newOrderArray.push({
-        key: order[i],
-        value: `${obj[order[i]]}`,
-      });
-
-      const deleteditem = order[i];
-      delete obj[deleteditem];
-    }
-  }
-
   const newArray = [];
-
   for (const object in obj) {
     newArray.push({
       key: `${object}`,
@@ -28,10 +14,27 @@ export default function orderByProps(obj, order) {
     });
   }
 
+  for (let i = 0; i < order.length; i++) {
+    if (order[i] in obj) {
+      newOrderArray.push({
+        key: order[i],
+        value: `${obj[order[i]]}`,
+      });
+    }
+    for (let x = 0; x < newArray.length; x++) {
+      if (newArray[x].key === order[i]) {
+        newArray.splice(newArray.indexOf(newArray[x]), 1)
+      }
+    }
+  }
+
   newArray.sort((a, b) => {
     if (a.key < b.key) return -1;
     if (a.key > b.key) return 1;
   });
+
+
+    
 
   for (let i = 0; i < newArray.length; i++) {
     newOrderArray.push(newArray[i]);
